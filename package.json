@@ -1,0 +1,12 @@
+{
+  "name": "lojain-abdalrazaq-typescript",
+  "version": "1.0.0",
+  "description": "Image Processing API using TypeScript and Express",
+  "main": "src/server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Lojain Abdalrazaq",
+  "license": "ISC"
+}
