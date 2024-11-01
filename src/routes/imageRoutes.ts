@@ -17,6 +17,11 @@ router.post(
     imageController.resizeImage 
 );
 
+router.post(
+    '/crop/:imageName',
+    imageController.cropImage
+)
+
 
 // exporting the router
 export default router;
