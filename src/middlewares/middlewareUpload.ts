@@ -34,8 +34,8 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallb
     if (Object.values(AllowedImageTypes).includes(file.mimetype as AllowedImageTypes)) {
         cb(null, true); // accept
     } else {
-        cb(null, false); // reject
         logError(`Invalid file type: ${file.mimetype}. Only JPEG, PNG, and GIF images are allowed.`);
+        cb(null, false); // reject
     }
 };
 
