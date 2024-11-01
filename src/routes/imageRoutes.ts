@@ -12,6 +12,11 @@ router.post(
     imageController.uploadImage 
 );
 
+router.post(
+    '/resize/:imageName',
+    imageController.resizeImage 
+);
+
 
 // exporting the router
 export default router;

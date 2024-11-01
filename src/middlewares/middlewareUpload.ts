@@ -41,22 +41,6 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallb
 
 };
 
-
-/* // fileFilter function to filter the uploaded files and accept only the allowed image types
-const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
-
-
-
-    // cheking if the uploaded file is an image with specific types defined in AllowedImageTypes enum
-    if (Object.values(AllowedImageTypes).includes(file.mimetype as AllowedImageTypes)) {
-        cb(null, true); // accept
-    } else {
-        logError(`Invalid file type: ${file.mimetype}. Only JPEG, PNG, and GIF images are allowed.`);
-        cb(null, false); // reject
-    }
-}; */
-
-
 // setting the upload middleware
 // the upload middleware takes an object with two properties: storage and fileFilter
 // storage -> the storage engine to be used for storing the uploaded files
