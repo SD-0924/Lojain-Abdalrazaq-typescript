@@ -9,3 +9,8 @@ export const logger = (req: Request, res: Response, next: NextFunction) => {
     // call the next middleware function in the stack
     next();
 };
+
+// function to log errors
+export const logError = (message: string) => {
+    console.error(`[ERROR] [${new Date().toISOString()}] ${message}`);
+};
