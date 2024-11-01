@@ -14,7 +14,7 @@ const uploadImage = (req: Request, res: Response): any => {
         return res.status(200).json({
             success: true,
             message: 'File uploaded successfully!', 
-            file: req.file
+            file: req.file // returning the uploaded file information
         });
     }catch(err){
         // if an error occurs, log the error and send back an error response
@@ -23,6 +23,24 @@ const uploadImage = (req: Request, res: Response): any => {
     }
     
 };
+
+// resizing an image 
+//const resizeImage = 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // export the uploadImage function
 export { uploadImage };

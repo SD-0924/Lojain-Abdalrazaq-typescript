@@ -10,7 +10,7 @@ import { AllowedImageTypes } from '../utils/allowedImageTypes';
 const storage = multer.diskStorage({
 
     destination: (req, file, cb) =>{
-        const folderPath = path.join(__dirname, '../../uploads/');
+        const folderPath = path.join(__dirname, '../../images/uploaded');
         cb(null, folderPath);
     },
 
