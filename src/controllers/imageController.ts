@@ -96,10 +96,30 @@ const cropImage = async (req: Request, res: Response): Promise<any> =>{
             return handleError(req, res, "x, y, width and height must be numbers.", 400);
         }
 
+        if (parsedWidth <= 0 || parsedHeight <= 0) {
+            return handleError(req, res, "Width and height must be positive values.", 400);
+        }
+
         const originalImagePath = path.join(uploadsFolderPath, imageName);
 
         if (!fs.existsSync(originalImagePath)) {
             return handleError(req, res, "The specified image does not exist.", 404);
+        }
+
+        // get metadata to confirm image dimensions and validate the cropping area
+        const { width: originalWidth, height: originalHeight } = await sharp(originalImagePath).metadata();
+        if (!originalWidth || !originalHeight) {
+            return handleError(req, res, "Failed to retrieve image metadata.", 500);
+        }
+
+        // Bounds check 1: Ensure x, y are within image dimensions
+        if (parsedX < 0 || parsedY < 0 || parsedX >= originalWidth || parsedY >= originalHeight) {
+            return handleError(req, res, "The x and y coordinates are out of bounds.", 400);
+        }
+
+        // Bounds check 2: Ensure the crop area does not exceed image dimensions
+        if (parsedX + parsedWidth > originalWidth || parsedY + parsedHeight > originalHeight) {
+            return handleError(req, res, "The cropping area exceeds the image bounds.", 400);
         }
 
         const croppedImagePath = path.join(processedFolderPath, `cropped-${parsedX}-${parsedY}-${parsedWidth}-${parsedHeight}-${imageName}`);
