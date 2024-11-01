@@ -33,5 +33,10 @@ router.post(
     imageController.filterImage
 )
 
+router.post(
+    '/watermark/:imageName',
+    imageController.watermarkImage
+)
+
 // exporting the router
 export default router;

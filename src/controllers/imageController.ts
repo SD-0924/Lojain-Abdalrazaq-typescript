@@ -184,6 +184,70 @@ const filterImage = async (req: Request, res: Response): Promise<any> =>{
 
 // watermark an image
 const watermarkImage = async (req: Request, res: Response): Promise<any> =>{
+    try{
+        const { imageName } = req.params;
+        const { watermarkImage, x, y } = req.body;
+
+        // parse x and y to ensure they are valid numbers
+        const parsedX = parseInt(x, 10);
+        const parsedY = parseInt(y, 10);
+
+        // validate the presence and type of x and y
+        if (isNaN(parsedX) || isNaN(parsedY)) {
+            return handleError(req, res, "Invalid coordinates. Both x and y must be numbers.", 400);
+        }
+
+        // search for the input imageName and the watermarkImage in the uploads folder
+        const originalImagePath = path.join(uploadsFolderPath, imageName);
+        const watermarkImagePath = path.join(uploadsFolderPath, watermarkImage);
+
+        if (!fs.existsSync(originalImagePath)){
+            return handleError(req, res, "The specified image does not exist.", 404);
+        }
+        if (!fs.existsSync(watermarkImagePath)){
+            return handleError(req, res, "The specified watermark image does not exist.", 404);
+        }
+
+        const outputImagePath = path.join(processedFolderPath, `watermarked-${x}-${y}-${imageName}`);
+        const watermarkPosition = { top: parsedY, left: parsedX };
+
+        const originalImage_ = sharp(originalImagePath);
+        const watermarkImage_ = sharp(watermarkImagePath);
+
+        // get metadata to confirm image dimensions, useful for additional validation if needed
+        const { width: originalWidth, height: originalHeight } = await originalImage_.metadata();
+        const { width: watermarkWidth, height: watermarkHeight } = await watermarkImage_.metadata();
+
+        // ensure metadata values are available
+        if (!originalWidth || !originalHeight || !watermarkWidth || !watermarkHeight) {
+            return handleError(req, res, "Failed to retrieve image metadata.", 500);
+        }
+
+         // validating that the watermark position is within the bounds of the original image
+        if (
+            parsedX < 0 || 
+            parsedY < 0 || 
+            parsedX + watermarkWidth > originalWidth || 
+            parsedY + watermarkHeight > originalHeight
+        ) {
+            return handleError(req, res, "The watermark position is out of bounds of the original image dimensions.", 400);
+        }
+
+        // apply the watermark image on the original image at the specified x and y coordinates
+        await originalImage_
+            .composite([{ input: watermarkImagePath, left: parsedX, top: parsedY }])
+            .toFile(outputImagePath);
+
+        res.status(200).json({
+            success: true,
+            message: `Watermark applied successfully.`,
+            watermarkedImagePath: outputImagePath,
+        });
+
+    } catch (err) {
+        const errorMessage = `Error: ${(err as Error).message}`;
+        return handleError(req, res, errorMessage, 500);
+    }
 };
 
 // export the uploadImage function
