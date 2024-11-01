@@ -3,6 +3,7 @@ import fs from 'fs';
 import sharp from 'sharp';
 import path from 'path';
 import { handleError } from '../utils/errorHandler';
+import { AllowedFilters } from '../utils/enums';
 
 const uploadsFolderPath = path.join(__dirname, '../../images/uploads'); // Path to the uploads folder
 const processedFolderPath = path.join(__dirname, '../../images/processed'); // Path to the prcessed folder
@@ -147,6 +148,9 @@ const filterImage = async (req: Request, res: Response): Promise<any> =>{
         const { imageName } = req.params;
         const { filterType } = req.body;
 
+        if (!filterType || typeof filterType !== 'string' || !Object.values(AllowedFilters).includes(filterType as AllowedFilters)) {
+            return handleError(req, res, `Invalid filter type. Please choose one of the following: ${Object.values(AllowedFilters).join(', ')}.`, 400);
+        }
         // searching for the image in the uploads folder
         const originalImagePath = path.join(uploadsFolderPath, imageName);
         if(!fs.existsSync(originalImagePath)){
@@ -159,10 +163,8 @@ const filterImage = async (req: Request, res: Response): Promise<any> =>{
         // applying the filter based on the filter type
         if (filterType === 'grayscale') {
             sharpInstance = sharpInstance.grayscale();
-        } else if (filterType === 'blur') {
-            sharpInstance = sharpInstance.blur(5);
         } else {
-            return handleError(req, res, "Invalid filter type. Please choose 'grayscale' or 'blur'.", 400);
+            sharpInstance = sharpInstance.blur(5);
         }
 
         await sharpInstance.toFile(outputImagePath);

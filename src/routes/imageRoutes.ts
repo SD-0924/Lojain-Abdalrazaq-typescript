@@ -28,6 +28,10 @@ router.get(
     imageController.downloadImage
 )
 
+router.post(
+    '/filter/:imageName',
+    imageController.filterImage
+)
 
 // exporting the router
 export default router;
