@@ -25,7 +25,7 @@ const uploadImage = (req: Request, res: Response): any => {
 };
 
 // resizing an image 
-//const resizeImage = 
+// const resizeImage = 
 
 
 
