@@ -3,7 +3,7 @@ import fs from 'fs';
 import sharp from 'sharp';
 import path from 'path';
 import { handleError } from '../utils/errorHandler';
-import { AllowedFilters } from '../utils/enums';
+import * as enums from '../utils/enums';
 
 const uploadsFolderPath = path.join(__dirname, '../../images/uploads'); // Path to the uploads folder
 const processedFolderPath = path.join(__dirname, '../../images/processed'); // Path to the prcessed folder
@@ -148,8 +148,8 @@ const filterImage = async (req: Request, res: Response): Promise<any> =>{
         const { imageName } = req.params;
         const { filterType } = req.body;
 
-        if (!filterType || typeof filterType !== 'string' || !Object.values(AllowedFilters).includes(filterType as AllowedFilters)) {
-            return handleError(req, res, `Invalid filter type. Please choose one of the following: ${Object.values(AllowedFilters).join(', ')}.`, 400);
+        if (!filterType || typeof filterType !== 'string' || !Object.values(enums.AllowedFilters).includes(filterType as enums.AllowedFilters)) {
+            return handleError(req, res, `Invalid filter type. Please choose one of the following: ${Object.values(enums.AllowedFilters).join(', ')}.`, 400);
         }
         // searching for the image in the uploads folder
         const originalImagePath = path.join(uploadsFolderPath, imageName);
@@ -182,11 +182,16 @@ const filterImage = async (req: Request, res: Response): Promise<any> =>{
 
 };
 
+// watermark an image
+const watermarkImage = async (req: Request, res: Response): Promise<any> =>{
+};
+
 // export the uploadImage function
 export { 
     uploadImage, 
     resizeImage,
     cropImage,
     downloadImage, 
-    filterImage
+    filterImage,
+    watermarkImage
 };
