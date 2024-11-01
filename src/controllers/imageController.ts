@@ -4,7 +4,7 @@ import sharp from 'sharp';
 import path from 'path';
 import { handleError } from '../utils/errorHandler';
 
-const folderPath = path.join(__dirname, '../../images/uploads'); // Path to the uploads folder
+const uploadsFolderPath = path.join(__dirname, '../../images/uploads'); // Path to the uploads folder
 const processedFolderPath = path.join(__dirname, '../../images/processed'); // Path to the prcessed folder
 
 // upload an image
@@ -48,7 +48,7 @@ const resizeImage = async (req: Request, res: Response): Promise<any> =>{
             return handleError(req, res, "Width and height must be numbers.", 400);
         }
 
-        const originalImagePath = path.join(folderPath, imageName);
+        const originalImagePath = path.join(uploadsFolderPath, imageName);
 
         if (!fs.existsSync(originalImagePath)) {
             return handleError(req, res, "The specified image does not exist.", 404);
@@ -95,7 +95,7 @@ const cropImage = async (req: Request, res: Response): Promise<any> =>{
             return handleError(req, res, "x, y, width and height must be numbers.", 400);
         }
 
-        const originalImagePath = path.join(folderPath, imageName);
+        const originalImagePath = path.join(uploadsFolderPath, imageName);
 
         if (!fs.existsSync(originalImagePath)) {
             return handleError(req, res, "The specified image does not exist.", 404);
@@ -128,7 +128,7 @@ const downloadImage = (req: Request, res: Response): any =>{
     const imagePath = path.join(processedFolderPath, imageName);
 
     // checking if the image exists to be downloaded
-    if (fs.existsSync(processedFolderPath)) {
+    if (fs.existsSync(imagePath)) {
         return res.download(imagePath, (err) => {
             // if an error occurs, log the error and send back an error response
             if (err) {
@@ -141,10 +141,50 @@ const downloadImage = (req: Request, res: Response): any =>{
     return handleError(req, res, "The specified processed image does not exist.", 404);
 }
 
+// filter image with blur and grayscale
+const filterImage = async (req: Request, res: Response): Promise<any> =>{
+    try{
+        const { imageName } = req.params;
+        const { filterType } = req.body;
+
+        // searching for the image in the uploads folder
+        const originalImagePath = path.join(uploadsFolderPath, imageName);
+        if(!fs.existsSync(originalImagePath)){
+            return handleError(req, res, "The specified image does not exist.", 404);
+        }
+
+        const outputImagePath = path.join(processedFolderPath, `filtered-${filterType}-${imageName}`);
+        let sharpInstance = sharp(originalImagePath);
+
+        // applying the filter based on the filter type
+        if (filterType === 'grayscale') {
+            sharpInstance = sharpInstance.grayscale();
+        } else if (filterType === 'blur') {
+            sharpInstance = sharpInstance.blur(5);
+        } else {
+            return handleError(req, res, "Invalid filter type. Please choose 'grayscale' or 'blur'.", 400);
+        }
+
+        await sharpInstance.toFile(outputImagePath);
+
+        res.status(200).json({
+            success: true,
+            message: `Image filtered successfully with ${filterType}.`,
+            filteredImagePath: outputImagePath
+        });
+
+    }catch(err){
+        const errorMessage = `Error: ${(err as Error).message}`;
+        return handleError(req, res, errorMessage, 500);
+    }
+
+};
+
 // export the uploadImage function
 export { 
     uploadImage, 
     resizeImage,
     cropImage,
-    downloadImage
+    downloadImage, 
+    filterImage
 };

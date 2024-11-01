@@ -5,7 +5,7 @@ import fs from 'fs';
 import { FileFilterCallback } from 'multer';
 import { Request } from 'express';
 import { logError } from './middlewareLogger';
-import { AllowedImageTypes } from '../utils/allowedImageTypes';
+import { AllowedImageTypes } from '../utils/enums';
 
 // folder path to store the uploaded files
 const folderPath = path.join(__dirname, '../../images/uploads');
