@@ -120,9 +120,31 @@ const cropImage = async (req: Request, res: Response): Promise<any> =>{
     }
 
 };
+
+// download an image
+const downloadImage = (req: Request, res: Response): any =>{
+
+    const { imageName } = req.params;
+    const imagePath = path.join(processedFolderPath, imageName);
+
+    // checking if the image exists to be downloaded
+    if (fs.existsSync(processedFolderPath)) {
+        return res.download(imagePath, (err) => {
+            // if an error occurs, log the error and send back an error response
+            if (err) {
+                return handleError(req, res, "Error downloading the image.", 500);
+            }
+        });
+    }
+
+    // if the processed image doesn't exist, send back an error response
+    return handleError(req, res, "The specified processed image does not exist.", 404);
+}
+
 // export the uploadImage function
 export { 
     uploadImage, 
     resizeImage,
-    cropImage
+    cropImage,
+    downloadImage
 };

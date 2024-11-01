@@ -6,6 +6,7 @@ import * as imageController from "../controllers/imageController";
 // creating an express router
 const router = express.Router();
 
+// defining the routes
 router.post(
     '/upload',
     upload.single('image'),
@@ -20,6 +21,11 @@ router.post(
 router.post(
     '/crop/:imageName',
     imageController.cropImage
+)
+
+router.get(
+    '/download/:imageName',
+    imageController.downloadImage
 )
 
 
