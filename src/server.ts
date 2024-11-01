@@ -1,5 +1,5 @@
 import express from 'express';
-const logger = require("./middleware/middlewareLogger");
+import { logger } from './middlewares/middlewareLogger';
 
 const app = express();
 const PORT = 3000;
