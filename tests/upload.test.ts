@@ -2,7 +2,7 @@ import request from 'supertest';
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
-import { uploadImage } from '../controllers/imageController';
+import { uploadImage } from '../src/controllers/imageController';
 
 const app = express();
 const upload = multer();
