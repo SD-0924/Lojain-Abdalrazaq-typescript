@@ -1,6 +1,5 @@
 import request from 'supertest';
 import express from 'express';
-import path from 'path';
 import { resizeImage } from '../controllers/imageController';
 
 const app = express();
