@@ -3,8 +3,6 @@ name: Node.js CI
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
@@ -28,4 +26,4 @@ jobs:
         run: npm run build
 
       - name: Run tests
-        run: npx jest  # Using npx to run jest
+        run: npm test
