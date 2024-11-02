@@ -28,7 +28,6 @@ describe('Upload Image Endpoint', () => {
     // Test case 2: Return an error if no image is attached
     it('should return an error if no image is uploaded', async () => {
 
-        // Send a POST request to the /api/upload endpoint without attaching an image
         const response = await request(app)
             .post('/api/upload');
 
