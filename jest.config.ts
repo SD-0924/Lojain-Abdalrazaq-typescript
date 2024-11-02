@@ -1,4 +1,6 @@
-module.exports = {
+import { Config } from 'jest';
+
+const config: Config = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/node_modules/'],
@@ -6,3 +8,5 @@ module.exports = {
         '^.+\\.tsx?$': 'ts-jest',
     },
 };
+
+export default config;
