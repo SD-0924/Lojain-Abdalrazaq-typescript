@@ -21,8 +21,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Fix permissions
+        run: chmod -R 755 node_modules/.bin
+
       - name: Build the project
         run: npm run build
 
       - name: Run tests
-        run: npm test
+        run: npx jest  # Using npx to run jest
